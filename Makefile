@@ -1,6 +1,5 @@
 .PHONY: all build run clean
 
-
 all: build
 
 build:
@@ -10,4 +9,4 @@ run:
 	./main
 
 clean:
-	rm -f main
+	@rm -f main

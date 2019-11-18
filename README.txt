@@ -1,6 +1,4 @@
 Yeah this README is in plain text
 
 
-
-
-This will someday be a SAT solver, when I find the time.
+dpll.hpp is a header-only implementation of the Davis-Putnam-Logemann-Loveland (DPLL) algorithm for use in SAT solving. 

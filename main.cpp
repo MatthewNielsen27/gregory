@@ -1,28 +1,13 @@
 #include <iostream>
 
-#include "formula.hpp"
-
-using namespace::std;
+#include "dpll.hpp"
 
 int main(const int argc, const char** argv) {
 
-    Formula p("p");
-    Formula q("q");
+    formula f = {{"~p", "q", "r"}, {"p"}};
+    interpretation i;
 
-    std::unordered_map<std::string, Formula*> formula_lookup;
-
-    Formula* f = make_formula("p q & !", formula_lookup);
-
-    Interpretation i;
-
-    i[formula_lookup["p"]] = true;
-    i[formula_lookup["q"]] = true;
-
-    cout << *f << endl;
-    cout << f->evaluate(i) << endl;
-
-    delete f;
-    
+    cout << (evaluation::satisfied == dpll(f, i)) << endl;
 
     return 0;
 }

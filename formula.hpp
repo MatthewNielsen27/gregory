@@ -143,6 +143,8 @@ Formula* make_formula(const std::string& rpn_repr, std::unordered_map<std::strin
         tokens.push_back(tmp);
     }
 
+    // This is a coment 
+
     Formula* temp = nullptr;
     std::vector<Formula*> subformulas;
 
