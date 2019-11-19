@@ -1,40 +1,16 @@
-#include <iostream>
 #include <set>
-#include <vector>
 #include <string>
 #include <list>
 #include <unordered_map>
-#include <queue>
 
-using namespace::std;
 
 // Custom type specification
 using literal = std::string;
 using clause = std::set<literal>;
 using formula = std::list<clause>;
 using interpretation = std::unordered_map<literal, bool>;
-
-
 enum class evaluation {satisfied, unsatisfied, unsure};
 
-
-// Overload the output operator to print formulas
-ostream& operator<<(ostream& os, const formula& f)
-{
-    os << "{ ";
-    for (const auto& c : f) {
-        os << "{";
-        for (const auto& l : c) {
-            os << l << ",";
-        }
-        if (!c.empty()) {
-            os << "\b";
-        }
-        os << "} ";
-    }
-    os << "}";
-    return os;
-}
 
 // Function to return the complement of a literal
 literal complement_of(const literal& l){
@@ -113,8 +89,6 @@ evaluation evaluate(const formula& f, const interpretation& i) {
 
 
 bool unit_resolution(formula& f, interpretation& i) {
-    std::queue<literal> q;
-
     while (!trivial_clauses_exausted(f)) {
         for (auto it = f.begin(); it != f.end();) {
             if ((*it).size() == 1) {
@@ -127,15 +101,11 @@ bool unit_resolution(formula& f, interpretation& i) {
                 i[l_prime] = false;
 
                 it = f.erase(it);                        // Remove {l} from f
-
-                cout << "performed unit resolution on literal: " << l << endl;
             } else if ((*it).empty()) {
                 return false;                       // Empty clause is unsatisfiable
             } else {
                 ++it;
             }
-
-            cout << f << endl;
         }
     }
 
@@ -161,7 +131,6 @@ void simplify(formula& f, const literal& l, const interpretation& i) {
 
 evaluation dpll(const formula& b, interpretation& i) {
     if (b.empty()) {
-        cout << "Empty formula!" << endl;
         return evaluation::satisfied;
     }
 
@@ -169,7 +138,6 @@ evaluation dpll(const formula& b, interpretation& i) {
     interpretation i_prime(i);
 
     if (unit_resolution(b_prime, i_prime) == false) {
-        cout << "Unit resolution found the formula to be unsatisfiable" << endl;
         return evaluation::unsatisfied;
     }
 
@@ -177,10 +145,7 @@ evaluation dpll(const formula& b, interpretation& i) {
     auto res = evaluate(b_prime, i_prime);
     if (res != evaluation::unsure) {
         if (res == evaluation::satisfied) {
-            cout << "Formula is satisfied under the given interpretation" << endl;
             i = i_prime;
-        } else {
-            cout << "Formula is not satisfied under the given interpretation" << endl;
         }
 
         return res;
@@ -196,7 +161,6 @@ evaluation dpll(const formula& b, interpretation& i) {
     i_prime[p] = val;
     i_prime[p_prime] = !val;
     {
-        cout << "Branching with " << p << " -> " << val << endl;
         simplify(b_1, p, i_prime);
         auto res = dpll(b_1, i_prime);
 
@@ -211,7 +175,6 @@ evaluation dpll(const formula& b, interpretation& i) {
     i_prime[p] = !val;
     i_prime[p_prime] = val;
     {  
-        cout << "Branching with " << p << " -> " << !val << endl;
         simplify(b_2, p, i_prime);
         auto res = dpll(b_2, i_prime);
         i = i_prime;
